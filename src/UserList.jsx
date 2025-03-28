@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import UserCard from "./UserCard";
+import "./UserList.css";
 
 export default function UserList() {
     const [users, setUsers] = useState([]);
@@ -16,7 +18,17 @@ export default function UserList() {
 
                 // If successfully fetched from API, get users in JSON format
                 const fetchedUsers = await response.json();
-                setUsers(fetchedUsers);
+
+                // Convert user data into strings first
+                const stringifiedUserData = fetchedUsers.map(user => ({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email,
+                    address: `${user.address.suite}, ${user.address.street}, ${user.address.city}`,
+                    phone: user.phone,
+                    company: user.company.name,
+                  }));
+                setUsers(stringifiedUserData);
             }
             catch (error) {
                 setError(error.message);
@@ -48,12 +60,10 @@ export default function UserList() {
     return (
         <div>
             <h2>List of users</h2>
-            <div>
+            <div className="grid-container">
                 {users.map((user) => (
                     // Display each user
-                    <div key={user.id}>
-                        <div>Name: {user.name} --- Email: {user.email}</div>
-                    </div>
+                    <UserCard key={user.id} user={user} />
                 ))}
             </div>
         </div>
