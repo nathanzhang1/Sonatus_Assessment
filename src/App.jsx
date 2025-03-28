@@ -4,9 +4,9 @@ import UserList from "./UserList.jsx";
 function App() {
 
   return (
-    <div>
-      <UserList />
-    </div>
+      <div>
+          <UserList />
+      </div>
   );
 }
 

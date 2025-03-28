@@ -6,6 +6,8 @@ export default function UserList() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [search, setSearch] = useState("");
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -29,6 +31,7 @@ export default function UserList() {
                     company: user.company.name,
                   }));
                 setUsers(stringifiedUserData);
+                setFilteredUsers(stringifiedUserData);
             }
             catch (error) {
                 setError(error.message);
@@ -41,6 +44,24 @@ export default function UserList() {
         // Fetch users when component mounts
         fetchUsers();
     }, [])
+
+    // Update filtered users when search changes
+    useEffect(() => {
+        // If nothing in search bar show all users
+        if (!search) {
+            setFilteredUsers(users);
+            return;
+        }
+
+        // Convert search term to lower case to standardize search
+        const lowerSearch = search.toLowerCase();
+
+        // Set filtered users to those with matching name or email
+        const filtered = users.filter(user =>
+            user.name.toLowerCase().includes(lowerSearch) || user.email.toLowerCase().includes(lowerSearch)
+        );
+        setFilteredUsers(filtered);
+    }, [search, users]);
 
     // Display loading or error messages if users not fetched
     if (loading) {
@@ -60,8 +81,15 @@ export default function UserList() {
     return (
         <div>
             <h2>List of users</h2>
+            <input
+                type="text"
+                placeholder="Search by name or email..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="user-search"
+            />
             <div className="grid-container">
-                {users.map((user) => (
+                {filteredUsers.map(user => (
                     // Display each user
                     <UserCard key={user.id} user={user} />
                 ))}
