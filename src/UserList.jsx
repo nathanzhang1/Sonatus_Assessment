@@ -10,6 +10,7 @@ export default function UserList() {
     const [search, setSearch] = useState("");
     const [sortBy, setSortBy] = useState(null);
     const [sortOrder, setSortOrder] = useState("asc");
+    
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -80,7 +81,7 @@ export default function UserList() {
     }, [search, users, sortBy, sortOrder]);
 
 
-    // Toggles sort order when clicked
+    // Toggles sort order for names when clicked
     const handleSortByName = () => {
         if (sortBy === "name") {
             setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
@@ -91,6 +92,7 @@ export default function UserList() {
         }
     };
 
+    // Toggles sort order for emails when clicked
     const handleSortByEmail = () => {
         if (sortBy === "email") {
             setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
@@ -101,9 +103,11 @@ export default function UserList() {
         }
     };
 
+
     // Sort button defaults to up arrow and is toggled upon click
     const nameArrow = sortBy === "name" ? (sortOrder === "asc" ? "▼" : "▲") : "▲";
     const emailArrow = sortBy === "email" ? (sortOrder === "asc" ? "▼" : "▲") : "▲";
+
 
     // Display loading or error messages if users not fetched
     if (loading) {
@@ -118,8 +122,6 @@ export default function UserList() {
         );
     }
 
-    console.log("users", users);
-    console.log("displayed", displayedUsers);
 
     return (
         <div>
