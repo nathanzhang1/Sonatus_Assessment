@@ -4,37 +4,37 @@
     padding: 16px;
     cursor: pointer;
     background-color: #fff;
-  }
+}
   
-  .user-card:hover {
+.user-card:hover {
     background-color: #f9f9f9;
-  }
+}
   
-  .user-header {
+.user-header {
     margin-bottom: 8px;
-  }
+}
   
-  .user-name {
+.user-name {
     font-size: 1.25rem;
     font-weight: bold;
     text-align: left;
     margin-bottom: 4px;
-  }
+}
   
-  .user-email {
+.user-email {
     font-size: 1rem;
     text-align: left;
     color: #333;
-  }
+}
   
-  .user-details {
+.user-details {
     margin-top: 8px;
     font-size: 1rem;
     text-align: left;
     color: #333;
-  }
+}
   
-  .user-details > div {
+.user-details > div {
     margin-top: 4px;
-  }
+}
   

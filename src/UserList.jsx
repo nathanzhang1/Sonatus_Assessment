@@ -6,8 +6,10 @@ export default function UserList() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [filteredUsers, setFilteredUsers] = useState([]);
+    const [displayedUsers, setDisplayedUsers] = useState([]);
     const [search, setSearch] = useState("");
+    const [sortBy, setSortBy] = useState(null);
+    const [sortOrder, setSortOrder] = useState("asc");
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -31,7 +33,7 @@ export default function UserList() {
                     company: user.company.name,
                   }));
                 setUsers(stringifiedUserData);
-                setFilteredUsers(stringifiedUserData);
+                setDisplayedUsers(stringifiedUserData);
             }
             catch (error) {
                 setError(error.message);
@@ -41,27 +43,67 @@ export default function UserList() {
             }
         };
 
-        // Fetch users when component mounts
         fetchUsers();
     }, [])
 
+
     // Update filtered users when search changes
     useEffect(() => {
-        // If nothing in search bar show all users
-        if (!search) {
-            setFilteredUsers(users);
-            return;
+        // Filter users if there is a search term
+        let filtered = users.filter(user => {
+            const lowerSearch = search.toLowerCase();
+            return (
+              user.name.toLowerCase().includes(lowerSearch) || user.email.toLowerCase().includes(lowerSearch)
+            );
+          });
+
+        // If a sort criteria is selected, sort the filtered array.
+        if (sortBy) {
+            filtered.sort((a, b) => {
+                // Compare strings alphabetically or reverse alphabetically depending on sort order
+                const aValue = a[sortBy].toLowerCase();
+                const bValue = b[sortBy].toLowerCase();
+
+                if (aValue < bValue) {
+                    return (sortOrder === "asc" ? -1 : 1);
+                }
+
+                if (aValue > bValue) {
+                    return sortOrder === "asc" ? 1 : -1;
+                }
+
+                return 0;
+            });
         }
 
-        // Convert search term to lower case to standardize search
-        const lowerSearch = search.toLowerCase();
+        setDisplayedUsers(filtered);
+    }, [search, users, sortBy, sortOrder]);
 
-        // Set filtered users to those with matching name or email
-        const filtered = users.filter(user =>
-            user.name.toLowerCase().includes(lowerSearch) || user.email.toLowerCase().includes(lowerSearch)
-        );
-        setFilteredUsers(filtered);
-    }, [search, users]);
+
+    // Toggles sort order when clicked
+    const handleSortByName = () => {
+        if (sortBy === "name") {
+            setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
+        } 
+        else {
+            setSortBy("name");
+            setSortOrder("asc");
+        }
+    };
+
+    const handleSortByEmail = () => {
+        if (sortBy === "email") {
+            setSortOrder(prev => (prev === "asc" ? "desc" : "asc"));
+        } 
+        else {
+            setSortBy("email");
+            setSortOrder("asc");
+        }
+    };
+
+    // Sort button defaults to up arrow and is toggled upon click
+    const nameArrow = sortBy === "name" ? (sortOrder === "asc" ? "▼" : "▲") : "▲";
+    const emailArrow = sortBy === "email" ? (sortOrder === "asc" ? "▼" : "▲") : "▲";
 
     // Display loading or error messages if users not fetched
     if (loading) {
@@ -76,7 +118,8 @@ export default function UserList() {
         );
     }
 
-    console.log(users);
+    console.log("users", users);
+    console.log("displayed", displayedUsers);
 
     return (
         <div>
@@ -88,9 +131,16 @@ export default function UserList() {
                 onChange={(e) => setSearch(e.target.value)}
                 className="user-search"
             />
+            <div className="sort-buttons">
+                <button onClick={handleSortByName}>
+                    Name {nameArrow}
+                </button>
+                <button onClick={handleSortByEmail}>
+                    Email {emailArrow}
+                </button>
+            </div>
             <div className="grid-container">
-                {filteredUsers.map(user => (
-                    // Display each user
+                {displayedUsers.map(user => (
                     <UserCard key={user.id} user={user} />
                 ))}
             </div>

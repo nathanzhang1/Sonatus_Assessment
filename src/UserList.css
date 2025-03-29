@@ -25,4 +25,25 @@
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 4px;
-  }
+}
+
+.sort-buttons {
+    margin-bottom: 16px;
+}
+
+.sort-buttons button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    margin-right: 8px;
+    cursor: pointer;
+    padding: 4px 8px;
+}
+
+.sort-buttons button:focus {
+    outline: none;
+}
+
+.sort-buttons button:hover {
+    background-color: #f9f9f9;
+}
